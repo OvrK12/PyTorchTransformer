@@ -2,8 +2,9 @@ import torch
 from torch import nn
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self,emb_dim, num_heads):
+    def __init__(self,emb_dim: int, num_heads: int):
         super().__init__()
+        assert emb_dim % num_heads == 0, "emb_dim must be divisible by num_heads"
         self.emb_dim = emb_dim
         self.num_heads = num_heads
         self.head_dim = emb_dim // num_heads
@@ -12,9 +13,9 @@ class MultiHeadAttention(nn.Module):
         self.K = nn.Linear(emb_dim, emb_dim)
         self.V = nn.Linear(emb_dim, emb_dim)
 
-        self.linear = nn.Linear(emb_dim, emb_dim)
+        self.w0 = nn.Linear(emb_dim, emb_dim)
     
-    def forward(self, x, mask):
+    def forward(self, x: torch.tensor, mask: torch.BoolTensor = None):
         batch_size = x.shape[0]
 
         # shape after this step: batch_size x num_heads x seq_length x emb_dim
@@ -30,7 +31,8 @@ class MultiHeadAttention(nn.Module):
         out = torch.nn.functional.softmax(out, dim=-1)
         # output has shape batch_size x num_heads x seq_length x emb_dim
         out = torch.matmul(out, v)
-         # output has shape batch_size x seq_length x emb_dim
+        # output has shape batch_size x seq_length x emb_dim
         out = out.transpose(1,2).contiguous().view(batch_size, -1, self.emb_dim)
 
-        return self.linear(out)
+        return self.w0(out)
+
