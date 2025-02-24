@@ -7,6 +7,9 @@ from torch.testing import assert_close
 
 class TestMultiHeadAttention(unittest.TestCase):
     def test_output_shape(self):
+        """
+        Test whether input/output shapes match
+        """ 
         batch_size = 8
         seq_length = 10
         emb_dim = 512
@@ -21,6 +24,9 @@ class TestMultiHeadAttention(unittest.TestCase):
         self.assertEqual(output.shape, (batch_size, seq_length, emb_dim))
     
     def test_with_known_values(self):
+        """
+        Test correctness of output using known values
+        """ 
         model = MultiHeadAttention(emb_dim=5, num_heads=1)
 
         test_embeddings = [torch.full((5,),0.5),

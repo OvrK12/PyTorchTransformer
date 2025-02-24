@@ -35,4 +35,3 @@ class MultiHeadAttention(nn.Module):
         out = out.transpose(1,2).contiguous().view(batch_size, -1, self.emb_dim)
 
         return self.w0(out)
-
