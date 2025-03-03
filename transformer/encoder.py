@@ -27,12 +27,12 @@ class Encoder(nn.Module):
                     sinusoid_table[pos, i] = math.cos(get_angle(pos, i, emb_dim))
         return sinusoid_table
         
-    def forward(self, x, mask):
-        batch_size = x.shape[0]
-        seq_length = x.shape[1]
-        positions = torch.arange(0,seq_length).unsqueeze(0).repeat(batch_size,1).to(x.device)
-        out = self.dropout(self.embedding(x) + self.pos_embedding(positions))
+    def forward(self, input: torch.tensor, mask: torch.BoolTensor = None):
+        batch_size = input.shape[0]
+        seq_length = input.shape[1]
+        positions = torch.arange(0,seq_length).unsqueeze(0).repeat(batch_size,1).to(input.device)
+        out = self.dropout(self.embedding(input) + self.pos_embedding(positions))
         for layer in self.transformer_blocks:
-            out = layer(out,mask)
+            out = layer(out, mask)
 
         return out

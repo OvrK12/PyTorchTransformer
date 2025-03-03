@@ -15,13 +15,15 @@ class MultiHeadAttention(nn.Module):
 
         self.w0 = nn.Linear(emb_dim, emb_dim)
     
-    def forward(self, x: torch.tensor, mask: torch.BoolTensor = None):
-        batch_size = x.shape[0]
+    def forward(self, query: torch.tensor, key_value: torch.tensor = None, mask: torch.BoolTensor = None):
+        if key_value is None:
+            key_value = query
+        batch_size = query.shape[0]
 
         # shape after this step: batch_size x num_heads x seq_length x emb_dim
-        q = self.Q(x).view(batch_size, -1, self.num_heads, self.head_dim).transpose(1,2)
-        k = self.K(x).view(batch_size, -1, self.num_heads, self.head_dim).transpose(1,2)
-        v = self.V(x).view(batch_size, -1, self.num_heads, self.head_dim).transpose(1,2)
+        q = self.Q(query).view(batch_size, -1, self.num_heads, self.head_dim).transpose(1,2)
+        k = self.K(key_value).view(batch_size, -1, self.num_heads, self.head_dim).transpose(1,2)
+        v = self.V(key_value).view(batch_size, -1, self.num_heads, self.head_dim).transpose(1,2)
 
         # output has shape batch_size x num_heads x seq_length x seq_length
         out = torch.matmul(q, k.transpose(-2, -1)) / self.head_dim ** 0.5

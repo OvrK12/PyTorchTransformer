@@ -17,10 +17,12 @@ class TransformerBlock(nn.Module):
             nn.Linear(forward_dim, emb_dim)
         )
     
-    def forward(self, x, mask):
+    def forward(self, query: torch.tensor, key_value: torch.tensor = None, mask: torch.BoolTensor = None):
+        if key_value == None:
+            key_value = query
         # input has shape: batch_size x seq_length x emb_dim
-        attention = self.mha(x, mask)
-        residual_1 = self.norm_1(x + self.dropout(attention))
+        attention = self.mha(query, key_value, mask)
+        residual_1 = self.norm_1(query + self.dropout(attention))
 
         out = self.ffnn(residual_1)
         return self.norm_2(residual_1 + self.dropout(out))
