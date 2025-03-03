@@ -2,7 +2,7 @@ import torch
 from torch import nn
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self,emb_dim: int, num_heads: int):
+    def __init__(self, emb_dim: int, num_heads: int):
         super().__init__()
         assert emb_dim % num_heads == 0, "emb_dim must be divisible by num_heads"
         self.emb_dim = emb_dim
