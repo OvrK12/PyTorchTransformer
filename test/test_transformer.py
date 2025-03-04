@@ -10,7 +10,6 @@ class TestTransformer(unittest.TestCase):
             Test whether input/output shapes match
             """
             padding_idx = 0
-            masked_idx = 1
             vocab_size = 1000
             num_layers = 8
             max_len = 64
@@ -21,7 +20,7 @@ class TestTransformer(unittest.TestCase):
             forward_dim = 4 * emb_dim
             dropout_rate = 0.1
         
-            transformer = Transformer(vocab_size, padding_idx, masked_idx, forward_dim, emb_dim, num_heads, num_layers, max_len, dropout_rate)
+            transformer = Transformer(vocab_size, padding_idx, forward_dim, emb_dim, num_heads, num_layers, max_len, dropout_rate)
 
             src = torch.randint(0, vocab_size, (batch_size, seq_length))
             tgt = torch.randint(0, vocab_size, (batch_size, seq_length))

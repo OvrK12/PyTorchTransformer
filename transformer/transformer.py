@@ -9,7 +9,6 @@ class Transformer(nn.Module):
             self,
             vocab_size = 1000,
             padding_idx = 0,
-            masked_idx = 1,
             forward_dim=2048,
             emb_dim=512,
             num_heads=8,
@@ -19,17 +18,15 @@ class Transformer(nn.Module):
             ):
         super().__init__()
         self.padding_idx = padding_idx
-        self.masked_idx = masked_idx
         self.encoder = Encoder(vocab_size, forward_dim, emb_dim, num_heads, num_layers, max_len, dropout_rate)
         self.decoder = Decoder(vocab_size, forward_dim, emb_dim, num_heads, num_layers, max_len, dropout_rate)
         self.linear = nn.Linear(emb_dim, vocab_size)
 
     def create_src_mask(self, src):
         device = src.device
-        padding_mask = (src != self.padding_idx).unsqueeze(1).unsqueeze(2)
-        masked_token_mask = (src != self.masked_idx).unsqueeze(1).unsqueeze(2)
+        src_mask = (src != self.padding_idx).unsqueeze(1).unsqueeze(2)
 
-        return (padding_mask * masked_token_mask).to(device)
+        return src_mask.to(device)
 
     def create_tgt_mask(self, tgt):
         device = tgt.device
