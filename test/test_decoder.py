@@ -21,10 +21,11 @@ class TestDecoder(unittest.TestCase):
     
         decoder = Decoder(vocab_size, forward_dim, emb_dim, num_heads, num_layers, max_len, dropout_rate)
         x = torch.randint(0, vocab_size, (batch_size, seq_length))
+        encoder_out = torch.randn(batch_size, seq_length, emb_dim)
         src_mask = None
         tgt_mask = None
 
-        output = decoder(x, x, src_mask, tgt_mask)
+        output = decoder(x, encoder_out, src_mask, tgt_mask)
         
         self.assertEqual(output.shape, (batch_size, seq_length, emb_dim))
 
