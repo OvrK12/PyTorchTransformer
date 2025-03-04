@@ -7,8 +7,10 @@ from transformer.decoder import Decoder
 class Transformer(nn.Module):
     def __init__(
             self,
-            vocab_size = 1000,
-            padding_idx = 0,
+            src_vocab_size = 1000,
+            tgt_vocab_size = 1000,
+            src_padding_idx = 0,
+            tgt_padding_idx = 0,
             forward_dim=2048,
             emb_dim=512,
             num_heads=8,
@@ -17,21 +19,22 @@ class Transformer(nn.Module):
             dropout_rate=0.1,
             ):
         super().__init__()
-        self.padding_idx = padding_idx
-        self.encoder = Encoder(vocab_size, forward_dim, emb_dim, num_heads, num_layers, max_len, dropout_rate)
-        self.decoder = Decoder(vocab_size, forward_dim, emb_dim, num_heads, num_layers, max_len, dropout_rate)
-        self.linear = nn.Linear(emb_dim, vocab_size)
+        self.src_padding_idx = src_padding_idx
+        self.tgt_padding_idx = tgt_padding_idx
+        self.encoder = Encoder(src_vocab_size, forward_dim, emb_dim, num_heads, num_layers, max_len, dropout_rate)
+        self.decoder = Decoder(tgt_vocab_size, forward_dim, emb_dim, num_heads, num_layers, max_len, dropout_rate)
+        self.linear = nn.Linear(emb_dim, tgt_vocab_size)
 
     def create_src_mask(self, src):
         device = src.device
-        src_mask = (src != self.padding_idx).unsqueeze(1).unsqueeze(2)
+        src_mask = (src != self.src_padding_idx).unsqueeze(1).unsqueeze(2)
 
         return src_mask.to(device)
 
     def create_tgt_mask(self, tgt):
         device = tgt.device
         batch_size, tgt_len = tgt.shape
-        tgt_mask = (tgt != self.padding_idx).unsqueeze(1).unsqueeze(2)
+        tgt_mask = (tgt != self.tgt_padding_idx).unsqueeze(1).unsqueeze(2)
         tgt_mask = tgt_mask * torch.tril(torch.ones((tgt_len, tgt_len))).expand(
             batch_size, 1, tgt_len, tgt_len
         ).to(device)

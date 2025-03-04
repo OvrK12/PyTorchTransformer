@@ -30,7 +30,7 @@ class MultiHeadAttention(nn.Module):
         if mask is not None:
             out = out.masked_fill(mask == 0, float("-inf"))
 
-        out = torch.nn.functional.softmax(out, dim=-1)
+        out = nn.functional.softmax(out, dim=-1)
         # output has shape batch_size x num_heads x seq_length x emb_dim
         out = torch.matmul(out, v)
         # output has shape batch_size x seq_length x emb_dim
