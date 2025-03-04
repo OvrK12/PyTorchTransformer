@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 
-from mha import MultiHeadAttention
+from transformer.mha import MultiHeadAttention
 
 class TransformerBlock(nn.Module):
     def __init__(self, forward_dim: int, emb_dim: int, num_heads: int, dropout_rate: float = 0.1):

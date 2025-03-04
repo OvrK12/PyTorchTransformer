@@ -1,11 +1,10 @@
 import sys
 sys.path.append('..')
-import torch
 import unittest
-from transformer.encoder import Encoder
-from torch.testing import assert_close
+import torch
+from transformer.decoder import Decoder
 
-class TestEncoder(unittest.TestCase):
+class TestDecoder(unittest.TestCase):
     def test_output_shape(self):
         """
         Test whether input/output shapes match
@@ -20,11 +19,12 @@ class TestEncoder(unittest.TestCase):
         forward_dim = 4 * emb_dim
         dropout_rate = 0.1
     
-        encoder = Encoder(vocab_size, forward_dim, emb_dim, num_heads, dropout_rate, num_layers, max_len)
+        decoder = Decoder(vocab_size, forward_dim, emb_dim, num_heads, num_layers, max_len, dropout_rate)
         x = torch.randint(0, vocab_size, (batch_size, seq_length))
-        mask = None
+        src_mask = None
+        tgt_mask = None
 
-        output = encoder(x, mask)
+        output = decoder(x, x, src_mask, tgt_mask)
         
         self.assertEqual(output.shape, (batch_size, seq_length, emb_dim))
 

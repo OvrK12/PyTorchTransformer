@@ -1,10 +1,10 @@
 import math
 import torch
 from torch import nn
-from transformer_block import TransformerBlock
+from transformer.transformer_block import TransformerBlock
 
 class Encoder(nn.Module):
-    def __init__(self, vocab_size: int, forward_dim: int, emb_dim: int, num_heads: int, dropout_rate: int, num_layers: int, max_len: int):
+    def __init__(self, vocab_size: int, forward_dim: int, emb_dim: int, num_heads: int, num_layers: int, max_len: int, dropout_rate: float = 0.1):
         super().__init__()
         self.embedding = nn.Embedding(vocab_size, emb_dim)
         self.pos_embedding = nn.Embedding.from_pretrained(self.get_sinusoid_table(max_len, emb_dim), freeze=True)
