@@ -33,6 +33,7 @@ class Encoder(nn.Module):
         positions = torch.arange(0,seq_length).unsqueeze(0).repeat(batch_size,1).to(input.device)
         out = self.dropout(self.embedding(input) + self.pos_embedding(positions))
         for layer in self.transformer_blocks:
-            out = layer(out, mask)
+            # query, key, value all come from the encoder out
+            out = layer(out, out, mask)
 
         return out
