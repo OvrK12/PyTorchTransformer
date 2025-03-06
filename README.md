@@ -1,5 +1,6 @@
 # PyTorch Transformer
 PyTorch implementation of a transformer from scratch according to the [Attention is All You Need](https://arxiv.org/abs/1706.03762) paper.
+![image](https://github.com/user-attachments/assets/5c612a76-aca3-451f-8323-6660a0d40688)
 
 ### Transformer Implementation
 All src files for the transformer are located under ```/transformer```
